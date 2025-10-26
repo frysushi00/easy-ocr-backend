@@ -4,18 +4,23 @@ import numpy as np
 from PIL import Image
 import io
 
-# 1. Initialize Flask App
 app = Flask(__name__)
 
-# 2. Initialize EasyOCR Reader (ONLY RUN ONCE!)
-# This step downloads and loads the models into memory, which is time-consuming.
-# Add your required languages here (e.g., 'en' for English)
-try:
-    reader = easyocr.Reader(['en'], gpu=False) # Set gpu=True if you have a capable GPU
-    print("EasyOCR models loaded successfully.")
-except Exception as e:
-    print(f"Error loading EasyOCR models: {e}")
-    reader = None
+# Reader akan di-load pertama kali hanya ketika ada request OCR
+reader = None
+
+@app.before_request
+def load_reader():
+    global reader
+    if reader is None:
+        print("Loading EasyOCR model (first request)...")
+        try:
+            reader = easyocr.Reader(['en', 'id'], gpu=False)
+            print("EasyOCR models loaded successfully (English + Indonesian).")
+        except Exception as e:
+            print(f"Error loading EasyOCR models: {e}")
+            reader = None
+
 
 @app.route('/ocr/read', methods=['POST'])
 def read_image():
