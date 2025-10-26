@@ -1,7 +1,7 @@
 # Use an official Python base
 FROM python:3.10-slim
 
-# set workdir
+# Set workdir
 WORKDIR /app
 
 # Install system deps for building packages and image processing
@@ -13,10 +13,9 @@ RUN apt-get update && \
 # Copy requirements first (for Docker caching)
 COPY requirements.txt .
 
-# Install CPU-only PyTorch wheels (explicit index) then requirements
-# NOTE: adjust torch version if you want a specific version
-RUN pip install --no-cache-dir torch torchvision -f https://download.pytorch.org/whl/cpu/torch_stable.html \
- && pip install --no-cache-dir -r requirements.txt
+# Install all dependencies
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app code
 COPY . .
