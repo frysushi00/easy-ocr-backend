@@ -15,7 +15,7 @@ COPY requirements.txt .
 
 # Install CPU-only PyTorch wheels (explicit index) then requirements
 # NOTE: adjust torch version if you want a specific version
-RUN pip install --no-cache-dir torch==2.0.1+cpu torchvision==0.15.2+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html \
+RUN pip install --no-cache-dir torch torchvision -f https://download.pytorch.org/whl/cpu/torch_stable.html \
  && pip install --no-cache-dir -r requirements.txt
 
 # Copy app code
